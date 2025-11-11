@@ -1,0 +1,13 @@
+# Editor directories and files
+.vscode/*
+
+# Node modules
+node_modules
+
+# Build artifacts
+dist
+
+# Lint files
+.eslintcache
+
+

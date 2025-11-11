@@ -1,0 +1,21 @@
+{
+  "singleQuote": true,
+  "vueIndentScriptAndStyle": false,
+
+  "plugins": ["prettier-plugin-tailwindcss"],
+  
+  "overrides": [{
+    "files": ["**/*.{js,mjs,cjs,jsx}"],
+    "options": {
+      "plugins": ["@prettier/plugin-oxc"],
+      "parser": "oxc"
+    }
+  }, 
+{
+  "files": ["**/*.{ts,mts,cts,tsx}"],
+  "options": {
+    "plugins": ["@prettier/plugin-oxc"],
+    "parser": "oxc-ts"
+  }
+  }]
+}
