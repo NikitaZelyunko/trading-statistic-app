@@ -1,8 +1,27 @@
 {
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "include": ["env.d.ts", "src/**/*", "src/**/*.ts", "src/**/*.vue"],
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ESNext",
+    "module": "preserve",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "noEmit": true,
 
+    "skipLibCheck": true,
+    "strict": true,
+    "allowJs": false,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+
+    "lib": [
+      "ESNext",
+      "dom",
+      "dom.iterable",
+      "webworker"
+    ],
+    
+    "types": [],
     "paths": {
       "@/*": ["./src/*"]
     }
