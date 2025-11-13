@@ -29,6 +29,18 @@ async function onShowStatistic() {
         <span>{{ lastStatistic.statistics.average }}</span>
       </div>
       <div>
+        <span>Мода:</span>
+        <span>{{ lastStatistic.statistics.mode }}</span>
+      </div>
+      <div>
+        <span>Медиана:</span>
+        <span>{{ lastStatistic.statistics.median }}</span>
+      </div>
+      <div>
+        <span>Стандартное отклонение:</span>
+        <span>{{ lastStatistic.statistics.standartDeviation }}</span>
+      </div>
+      <div>
         <span>Время рассчета:</span>
         <span>{{ lastStatistic.calculationTime }}ms</span>
       </div>

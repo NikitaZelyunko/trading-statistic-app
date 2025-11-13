@@ -202,7 +202,7 @@ export function createInWorkerQuotesFlow() {
   function startMessagesFlow() {
     messagesGenerationIsActive = true;
     clearTimeout(actualTimerId);
-    initMessagesGeneration({ messagesPerTask: 1000000 });
+    initMessagesGeneration({ messagesPerTask: 100000000 });
   }
 
   function stopMessagesFlow() {
