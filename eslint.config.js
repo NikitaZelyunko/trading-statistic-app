@@ -12,18 +12,13 @@ const stylisticConfig = stylistic.configs.customize({
 });
 
 const lineMaxLength = 120;
-stylisticConfig.rules['@stylistic/max-len'] = [
-  'error',
-  { code: lineMaxLength },
-];
+stylisticConfig.rules['@stylistic/max-len'] = ['error', { code: lineMaxLength }];
+stylisticConfig.rules['@stylistic/operator-linebreak'] = ['error', 'ignore'];
 
 const ignoreVueCssIssues = {
   files: ['**/*.vue'],
   rules: {
-    '@stylistic/max-len': [
-      'error',
-      { code: lineMaxLength, ignorePattern: '@apply ' },
-    ],
+    '@stylistic/max-len': ['error', { code: lineMaxLength, ignorePattern: '@apply ' }],
   },
 };
 

@@ -38,7 +38,7 @@ export function useWebSocket<T>(
   // let lastMessageDerivedTime = 0;
 
   function messageHandler(event: MessageEvent<T>) {
-    console.log('Message:', event); // event.data
+    // console.log('Message:', event); // event.data
     lastMessage.value = event.data;
     // lastMessageDerivedTime = Date.now();
   }
@@ -97,7 +97,6 @@ export function useWebSocket<T>(
   }
 
   function closeConnection() {
-    console.log('CLOSE CONNECTION');
     if (!connection.value) {
       return;
     }

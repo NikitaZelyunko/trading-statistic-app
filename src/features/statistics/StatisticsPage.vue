@@ -1,22 +1,21 @@
 <script setup lang="ts">
 import UiButton from '@/ui/UiButton.vue';
 import { ref } from 'vue';
-import { createStatisticsCalculator, type TActualQuotesStatistic } from './services/statistics-calculator';
+import { useStatisticsCalculatorService, type TActualQuotesStatistic } from './services/statistics-calculator-service';
 
-let currentConnection = ref<ReturnType<typeof createStatisticsCalculator> | null>(null);
+const statisticsCalculatorService = useStatisticsCalculatorService();
 function onStart() {
-  currentConnection.value?.destroy();
-  currentConnection.value = createStatisticsCalculator();
+  statisticsCalculatorService.start();
 }
 
 function onStop() {
-  currentConnection.value?.destroy();
+  statisticsCalculatorService.stop();
 }
 
 const lastStatistic = ref<TActualQuotesStatistic | null>(null);
 // TODO нужен блокер от спама
-function onShowStatistic() {
-  lastStatistic.value = currentConnection.value?.getActualStatistics() ?? null;
+async function onShowStatistic() {
+  lastStatistic.value = (await statisticsCalculatorService.getActualStatistics()) ?? null;
 }
 </script>
 
@@ -27,7 +26,7 @@ function onShowStatistic() {
     <div v-if="lastStatistic">
       <div>
         <span>Среднее:</span>
-        <span>{{ lastStatistic.statistic.average }}</span>
+        <span>{{ lastStatistic.statistics.average }}</span>
       </div>
       <div>
         <span>Время рассчета:</span>
@@ -35,7 +34,7 @@ function onShowStatistic() {
       </div>
       <div>
         <span>Количество значений:</span>
-        <span>{{ lastStatistic.valuesCount }}</span>
+        <span>{{ lastStatistic.statistics.valuesCount }}</span>
       </div>
     </div>
 
