@@ -1,6 +1,6 @@
 import { postMessageFromWorker, type TMessageFromWorker } from '@/utils/web-worker/postMessageFromWorker';
 import { createStatisticsCalculator, type TQuotesStatistic } from './statistics-calculator';
-import { createInWorkerQuotesFlow } from '../api/create-quotes-flow';
+import { createInWorkerQuotesFlow, emulateWebsocketWithManyQuoutes } from '../api/create-quotes-flow';
 import type { TQuouteData } from '../types/quote-data';
 
 type TGetStatisticsEventName = 'get-statistics';
@@ -13,6 +13,7 @@ export type TGetStatisticsMessageFromWorker = TMessageFromWorker<TGetStatisticsE
 
 const statisticsCalculator = createStatisticsCalculator();
 const quotesFlowService = createInWorkerQuotesFlow();
+// const quotesFlowService = emulateWebsocketWithManyQuoutes();
 
 onmessage = (event: MessageEvent<TStatisticsCalculatorWorkerEventData>) => {
   function processMessage(message: TQuouteData) {
@@ -37,7 +38,7 @@ onmessage = (event: MessageEvent<TStatisticsCalculatorWorkerEventData>) => {
     postMessageFromWorker(event.data, statistics);
   } else if (event.data === 'stop-messages-processing') {
     console.log('WORKER', 'stop-message-processing');
-    quotesFlowService.removeMessageListener(processMessage);
+    quotesFlowService.removeMessageListener();
     quotesFlowService.stopMessagesFlow();
   }
 };

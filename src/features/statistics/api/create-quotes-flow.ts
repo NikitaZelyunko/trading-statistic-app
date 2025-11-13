@@ -1,6 +1,7 @@
 import { useWebSocket } from '@/utils/websocket/useWebSocket';
 import { ref, watch } from 'vue';
 import type { TQuouteData } from '../types/quote-data';
+import { createWebSocketService } from '@/utils/websocket/webSocketService';
 
 function emulateManyQuoutes() {
   const currentConnection = ref<ReturnType<typeof useWebSocket> | null>(null);
@@ -94,6 +95,77 @@ export function createQuotesFlow() {
   };
 }
 
+export function emulateWebsocketWithManyQuoutes() {
+  let messageListener: ((message: TQuouteData) => void) | null = null;
+  function addMessageListener(listener: Exclude<typeof messageListener, null>) {
+    messageListener = listener;
+  }
+
+  function removeMessageListener() {
+    messageListener = null;
+  }
+
+  let actualTimerId: number = 0;
+  let currentWebSocketService: ReturnType<typeof createWebSocketService>;
+  function updateCurrentConnection() {
+    if (!messagesGenerationIsActive) {
+      return;
+    }
+    const webSocketService = createWebSocketService<string>('wss://trade.termplat.com:8800/?password=1234');
+    currentWebSocketService = webSocketService;
+
+    let lastMessageTime = 0;
+    webSocketService.addMessageListener((newMessage) => {
+      if (!messageListener || !newMessage) {
+        return;
+      }
+      messageListener(JSON.parse(newMessage));
+      lastMessageTime = Date.now();
+    });
+
+    function destroyCurrentConnection() {
+      webSocketService.removeMessageListener();
+      webSocketService.destroy();
+    }
+
+    function createSilenceTimeout() {
+      actualTimerId = setTimeout(() => {
+        const timeNotExpired = !lastMessageTime || Date.now() < lastMessageTime + 3000;
+        const restartTimerCondition = timeNotExpired && webSocketService.getStatus() === 'pending';
+        if (restartTimerCondition) {
+          createSilenceTimeout();
+          return;
+        }
+        destroyCurrentConnection();
+        updateCurrentConnection();
+      }, 1000);
+    }
+
+    createSilenceTimeout();
+  }
+
+  let messagesGenerationIsActive = false;
+  function startMessagesFlow() {
+    messagesGenerationIsActive = true;
+    clearTimeout(actualTimerId);
+    updateCurrentConnection();
+  }
+
+  function stopMessagesFlow() {
+    messagesGenerationIsActive = false;
+    clearTimeout(actualTimerId);
+    currentWebSocketService?.destroy();
+  }
+
+  return {
+    addMessageListener,
+    removeMessageListener,
+
+    startMessagesFlow,
+    stopMessagesFlow,
+  };
+}
+
 type TMessageListener<M> = (message: M) => void;
 
 export function createInWorkerQuotesFlow() {
@@ -103,7 +175,7 @@ export function createInWorkerQuotesFlow() {
     messageListener = listener;
   }
 
-  function removeMessageListener(listener: TMessageListener<TQuouteData>) {
+  function removeMessageListener() {
     messageListener = null;
   }
 
