@@ -189,7 +189,7 @@ export function createInWorkerQuotesFlow() {
         }
         console.log('START MESSAGES CHUNK');
         for (let i = 1; i < messagesPerTask; i++) {
-          messageListener({ id: '-1', value: Math.round(10000 * Math.random()) });
+          messageListener({ id: '-1', value: Math.round(10000000 * Math.random()) });
         }
 
         createTimeout();
