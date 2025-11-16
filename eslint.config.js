@@ -4,6 +4,7 @@ import tseslint from 'typescript-eslint';
 import pluginVue from 'eslint-plugin-vue';
 import stylistic from '@stylistic/eslint-plugin';
 import { defineConfig, globalIgnores } from 'eslint/config';
+import pluginVitest from '@vitest/eslint-plugin';
 
 const stylisticConfig = stylistic.configs.customize({
   semi: true,
@@ -41,4 +42,9 @@ export default defineConfig([
   },
   stylisticConfig,
   ignoreVueCssIssues,
+
+  {
+    ...pluginVitest.configs.recommended,
+    files: ['src/**/__tests__/*'],
+  },
 ]);
