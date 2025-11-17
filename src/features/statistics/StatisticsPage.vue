@@ -38,7 +38,7 @@ async function onShowStatistic() {
       </div>
       <div>
         <span>Стандартное отклонение:</span>
-        <span>{{ lastStatistic.statistics.standartDeviation }}</span>
+        <span>{{ lastStatistic.statistics.standardDeviation }}</span>
       </div>
       <div>
         <span>Время рассчета:</span>
