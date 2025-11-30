@@ -42,7 +42,11 @@ async function onShowStatistic() {
       </div>
       <div>
         <span>Время рассчета:</span>
-        <span>{{ lastStatistic.calculationTime }}ms</span>
+        <span>{{ lastStatistic.calculationTimeInfo.statisticsCalculationTime }}ms</span>
+      </div>
+      <div>
+        <span>Полное время ожидания ответа:</span>
+        <span>{{ lastStatistic.calculationTimeInfo.fullWaitingTime }}ms</span>
       </div>
       <div>
         <span>Количество значений:</span>

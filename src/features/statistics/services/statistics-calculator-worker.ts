@@ -1,5 +1,5 @@
 import { postMessageFromWorker, type TMessageFromWorker } from '@/utils/web-worker/postMessageFromWorker';
-import { createStatisticsCalculator, type TQuotesStatistic } from './statistics-calculator';
+import { createStatisticsCalculator, type TQuotesStatisticWithCalculationTimeInfo } from './statistics-calculator';
 import { createInWorkerQuotesFlow, emulateWebsocketWithManyQuoutes } from '../api/create-quotes-flow';
 import type { TQuouteData } from '../types/quote-data';
 
@@ -9,7 +9,10 @@ export type TStatisticsCalculatorWorkerEventData =
   | 'stop-messages-processing'
   | TGetStatisticsEventName;
 
-export type TGetStatisticsMessageFromWorker = TMessageFromWorker<TGetStatisticsEventName, TQuotesStatistic>;
+export type TGetStatisticsMessageFromWorker = TMessageFromWorker<
+  TGetStatisticsEventName,
+  TQuotesStatisticWithCalculationTimeInfo
+>;
 
 const statisticsCalculator = createStatisticsCalculator();
 const quotesFlowService = createInWorkerQuotesFlow();

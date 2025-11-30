@@ -60,10 +60,12 @@ describe('Statistics-calculator', () => {
     }
 
     const actualStatistic = statisticsCalculator.getActualStatistics();
-    expect(actualStatistic.average.toFixed(2)).toEqual(expectedResult.average.toFixed(2));
-    expect(actualStatistic.median).toEqual(expectedResult.median);
-    expect(actualStatistic.mode).toEqual(expectedResult.mode);
-    expect(actualStatistic.standardDeviation.toFixed(2)).toEqual(expectedResult.standardDeviation.toFixed(2));
-    expect(actualStatistic.valuesCount).toEqual(expectedResult.valuesCount);
+    expect(actualStatistic.statistics.average.toFixed(2)).toEqual(expectedResult.average.toFixed(2));
+    expect(actualStatistic.statistics.median).toEqual(expectedResult.median);
+    expect(actualStatistic.statistics.mode).toEqual(expectedResult.mode);
+    expect(actualStatistic.statistics.standardDeviation.toFixed(2)).toEqual(
+      expectedResult.standardDeviation.toFixed(2),
+    );
+    expect(actualStatistic.statistics.valuesCount).toEqual(expectedResult.valuesCount);
   });
 });

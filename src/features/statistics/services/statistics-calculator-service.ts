@@ -5,7 +5,7 @@ import type {
   TGetStatisticsMessageFromWorker,
   TStatisticsCalculatorWorkerEventData,
 } from './statistics-calculator-worker';
-import type { TQuotesStatistic } from './statistics-calculator';
+import type { TQuotesStatistic, TQuotesStatisticWithCalculationTimeInfo } from './statistics-calculator';
 
 function useStatisticCalculatorWorker() {
   const workerApi = useWebWorker<TStatisticsCalculatorWorkerEventData, TGetStatisticsMessageFromWorker>(
@@ -15,8 +15,8 @@ function useStatisticCalculatorWorker() {
     },
   );
 
-  function getStatistics() {
-    const { resolve, promise } = Promise.withResolvers<TQuotesStatistic>();
+  function getStatisticsWithCalculationTime() {
+    const { resolve, promise } = Promise.withResolvers<TQuotesStatisticWithCalculationTimeInfo>();
     workerApi.sendMessageToWorker('get-statistics');
 
     const stopWatchMessage = watch(workerApi.data, (dataValue) => {
@@ -45,15 +45,19 @@ function useStatisticCalculatorWorker() {
     startValuesCollection,
     stopValuesCollection,
 
-    getStatistics,
+    getStatisticsWithCalculationTime,
 
     destroy,
   };
 }
 
+type TCalculationTimeInfo = {
+  statisticsCalculationTime: number;
+  fullWaitingTime: number;
+};
 export type TActualQuotesStatistic = {
   statistics: TQuotesStatistic;
-  calculationTime: number;
+  calculationTimeInfo: TCalculationTimeInfo;
 };
 
 export function useStatisticsCalculatorService() {
@@ -69,16 +73,21 @@ export function useStatisticsCalculatorService() {
 
   async function getActualStatistics(): Promise<TActualQuotesStatistic> {
     const calculateStartMark = performance.now();
-    const statistics = await statisticCalculatorWorkerApi.getStatistics();
-    const calculationTime = Math.floor(
+    const statisticsResult = await statisticCalculatorWorkerApi.getStatisticsWithCalculationTime();
+    const fullWaitingTime = Math.floor(
       performance.measure('statistic-calculation', {
         start: calculateStartMark,
         end: performance.now(),
       }).duration,
     );
     return {
-      statistics,
-      calculationTime,
+      statistics: statisticsResult.statistics,
+
+      calculationTimeInfo: {
+        fullWaitingTime,
+        statisticsCalculationTime:
+          statisticsResult.calculationTime.sortingTime + statisticsResult.calculationTime.medianFindTime,
+      },
     };
   }
 
